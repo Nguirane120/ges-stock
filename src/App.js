@@ -7,6 +7,7 @@ import AddCategory from './component/categories/Cat-Form';
 import { ShowCategory } from './component/categories/Cat-List';
 import Addproduct from './component/product/Add-product';
 import Products from './component/product/Product_List';
+import EditProduct from './component/product/Edit-product';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
       <Route path='/show-category' component={ShowCategory}/>
       <Route path='/add-product' component={Addproduct}/>
       <Route path='/product-list' component={Products}/>
+      <Route path='/edit-product/:id' component={EditProduct}/>
+
 
 
 

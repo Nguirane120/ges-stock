@@ -1,4 +1,4 @@
-// import axios from 'axios'
+import axios from 'axios'
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 // import swal from 'sweetalert'
@@ -7,10 +7,7 @@ const AddCategory = () => {
 
 
     const [category, setCategory] = useState({
- 
         name:'',
-      
-
     })
 
     const { name} = category
@@ -27,25 +24,22 @@ const handleSubmit = (e) =>{
     
     }
 
-    // axios.post(`api/add-category`, data).then( res =>{
-    //     if(res.data.status === 200){
-    //         swal("Success", res.data.message, 'success')
-    //         setCategory({
-    //             slug:'',
-    //             name:'',
-    //             description:'',
-    //             status:'',
-    //             meta_title:'',
-    //             meta_keywords:'',
-    //             meta_description:'',
-    //             error_list:[]
-    //         })
-    //     }else if( res.data.status === 400){
-    //         setCategory({...category, error_list:res.data.errors})
-    //         console.log(error_list.slug)
-    //     }
+    axios.post(`http://127.0.0.1:8000/api/add-category`, data).then( res =>{
+      console.log('RES', res.data)
+        if(res.data.status === 200){
+            // swal("Success", res.data.message, 'success')
+            setCategory({
+
+                name:'',
+           
+            })
+        }
+        // else if( res.data.status === 400){
+        //     setCategory({...category, error_list:res.data.errors})
+        //     console.log(error_list.slug)
+        // }
         
-    // })
+    })
 }
 
 

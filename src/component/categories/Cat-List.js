@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-// import axios from 'axios'
+import axios from 'axios'
 // import swal from 'sweetalert'
 
 
 export const ShowCategory = () => {
 
    const [listCategory, setListGory] = useState([])
-//    const [loading, setLoadning] = useState(true)
+   const [loading, setLoadning] = useState(true)
 
-//    useEffect(() =>{
-//        axios.get(`api/show-category`).then((res) =>{
-//         console.log(res.data.categories)
-//         if(res.data.status === 200)
-//         {
-//             setListGory(res.data.categories)
-//         }
-//         setLoadning(false)
-//        })
-//    })
+   useEffect(() =>{
+       axios.get(`http://127.0.0.1:8000/api/show-category`).then((res) =>{
+        console.log(res.data.categories)
+        if(res.data.status === 200)
+        {
+            setListGory(res.data.categories)
+        }
+        setLoadning(false)
+       })
+   })
 
 //  if(loading){
 //      return(
@@ -61,10 +61,12 @@ export const ShowCategory = () => {
                         </tr>
                     </thead>
                     <tbody>
-                     
-                                        <tr>
+                     {
+                        listCategory.map((item) =>{
+                            return(
+                                <tr>
                                             
-                                            <td>name</td>
+                                    <td>{item.name}</td>
                                            
                                             <td>
                                                 <Link to='' className="btn btn-warning btn-sm">Update</Link>
@@ -73,6 +75,10 @@ export const ShowCategory = () => {
                                             <Link className="btn btn-danger btn-sm" onClick={(e) => handleDelete(e)}>Delete</Link>
                                             </td>
                                         </tr>
+                            )
+                        })
+                     }
+                                        
                       
                     </tbody>
                 </table>

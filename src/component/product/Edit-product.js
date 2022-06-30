@@ -1,85 +1,97 @@
 import React, {useEffect, useState} from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
-// import swal from 'sweetalert'
 
-const Addproduct = () => {
-
-   const [categoriList, setCategoriList] = useState()
-   const [picture, setPicture] = useState([])
-
-  const [error_list, setErrorList] = useState([])
-const history = useHistory()
-   const [products, setProducts] = useState({
-       category_id:'',
-       name:'',
-       price:'',
-       qt:'',
-    
-   })
-
-   const {category_id, slug, name, price, qt} = products
-   const handleChange = (e) =>{
-       e.persist()
-       setProducts({...products, [e.target.name]: e.target.value})
-   }
-
-   const handleImage = e =>{
-         e.persist()
-        setPicture({image: e.target.files[0]})
-   }
-
-    useEffect(() =>{
-        axios.get(`http://127.0.0.1:8000/api/show-category`).then((res) =>{
-        setCategoriList(res.data.categories)
-        })
-    }, [])
-
-    const handleSubmit = (e) =>{
-        e.preventDefault()
-
-        const formDate = new FormData()
-        formDate.append('image', picture.image);
-        formDate.append('category_id', category_id);
-        formDate.append('name', name);
-        formDate.append('price', price );
-        formDate.append('qt', qt );
-       
-
-        axios.post(`http://127.0.0.1:8000/api/add-product`, formDate).then( res =>{
-            console.log('Res',res)
-            if(res.data.status === 200)
-            {
-                // swal("Success", res.data.message, 'success')
-                // setErrorList([])
-                history.push('/product-list')
-                setProducts({
-                    category_id:'',
-                    name:'',
-                    price:'',
-                    qt:'',
-               
-                })
-
-            }
-            // else if(res.data.status == 422)
-            // {
-            //     swal("Veuillez remplir tous les champs",'', 'error')
-            //     setErrorList(res.data.errors)
-            // }
-            
-        })
+const EditProduct = (props) => {
+    const [categoriList, setCategoriList] = useState()
+    const [picture, setPicture] = useState([])
+ 
+   const [error_list, setErrorList] = useState([])
+ 
+    const [products, setProducts] = useState({
+        category_id:'',
+        name:'',
+        price:'',
+        qt:'',
+     
+    })
+ 
+    const {category_id, slug, name, price, qt} = products
+    const handleChange = (e) =>{
+        e.persist()
+        setProducts({...products, [e.target.name]: e.target.value})
     }
-
-
-
-
+ 
+    const handleImage = e =>{
+          e.persist()
+         setPicture({image: e.target.files[0]})
+    }
+ 
+     useEffect(() =>{
+        axios.get(`http://127.0.0.1:8000/api/show-category`).then((res) =>{
+            setCategoriList(res.data.categories)
+            })
+    
+            const produc_id = props.match.params.id
+    
+            axios.get(`http://127.0.0.1:8000/api/edit-product/${produc_id}`).then((res) =>{
+                if(res.data.status === 200)
+                {
+                    setProducts(res.data.product)
+                    
+                }
+    
+                else if(res.data.status === 404)
+                {
+                    // swal("Error", res.data.error, 'error')
+                    // history.push('/admin/products')
+    
+                }
+    
+                // setLoadning(false)
+            })
+        }, [props.match.params.id])
+     
+ 
+     const handleSubmit = (e) =>{
+         e.preventDefault()
+ 
+         const formDate = new FormData()
+         formDate.append('image', picture.image);
+         formDate.append('category_id', category_id);
+         formDate.append('name', name);
+         formDate.append('price', price );
+         formDate.append('qt', qt );
+         const produc_id = props.match.params.id
+ 
+         axios.post(`http://127.0.0.1:8000/api/update-product/${produc_id}`, formDate).then( res =>{
+             console.log('Res',res)
+             if(res.data.status === 200)
+             {
+                 // swal("Success", res.data.message, 'success')
+                 // setErrorList([])
+                 setProducts({
+                     category_id:'',
+                     name:'',
+                     price:'',
+                     qt:'',
+                
+                 })
+             }
+             // else if(res.data.status == 422)
+             // {
+             //     swal("Veuillez remplir tous les champs",'', 'error')
+             //     setErrorList(res.data.errors)
+             // }
+             
+         })
+     }
     return (
         <div className="container">
 
             <div className="card mt-4">
                 <div className="card-header">
-                    <h4>Add product
+                    <h4>Edit product
                         <Link to='/product-list' className='btn btn-primary float-end'>View prouct</Link>
                     </h4>
                 </div>
@@ -161,4 +173,4 @@ const history = useHistory()
     )
 }
 
-export default Addproduct
+export default EditProduct
