@@ -33,7 +33,8 @@ export const ShowCategory = () => {
         "id":id
     }
 
-     axios.post(`http://localhost:8010/delete_categories`, {'params':data}).then( res =>{
+    console.log(data)
+     axios.post(`http://localhost:8010/delete_category`, {'params':data}).then( res =>{
         console.log(res)
      }).catch(error =>{
         console.log("Error", error)

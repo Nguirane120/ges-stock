@@ -9,50 +9,32 @@ const Products = () => {
 
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
-    const [catData, setCatData] = useState()
-    const history =  useHistory()
+    const [product, setProduct] = useState()
+    const history = useHistory()
 
-    // const getProd = async () =>{
-    //     try {
-    //         const response = await axios.post(`http://localhost:8010/get_products`, {
-    //             // "jsonrpc":2.0,
-    //             // "params":{
-    //             // }
-            
-    //         });
-    //         console.log(response.data.result.response);
-    //         const listProducts =response.data.result.response;
-    //         // console.log(response)
-    //       } catch (error) {
-    //         console.log(" message d'erreur: ", error.message);
-    //       }
-    // }
 
     useEffect(() =>{
-        // getProd()
+      
         axios.post(`http://localhost:8010/get_products`, {}).then((res) =>{
-        console.log('Res',res)
+            console.log(res)
         setProducts(res.data.result.response)
         setLoading(false)
         
         })
-    }, [products])
-
-    
+    }, [])
 
 
-    const onUpdateSumbit=(data)=>{
+
+    const updateProduct = (data) =>{
         console.log(data)
-        setCatData(data);
+        setProduct(data);
         history.push({
-            pathname:"/edit-product",
-            state:data
+        pathname:"/edit-product",
+        state:data
     
         })
+    }
     
-     }
-
-
     const handleDelete = (e, id) =>{
         e.preventDefault()
         const textClicked = e.currentTarget;
@@ -76,7 +58,6 @@ const Products = () => {
             <h1>Loading products...</h1>
         )
     }else{
-        let producStatus = '';
         fetchProducts = products.map((item, index) =>{
             return(
                 <>
@@ -87,10 +68,9 @@ const Products = () => {
                     <td><img src={`http://localhost:8070/${item.image}`} width="50px" alt={item.name} /></td>
                     <td>{item.pu}</td>
                     <td>{item.qte}</td>
-                    <td><Link className='btn btn-warning btn-sm' onClick={onUpdateSumbit(item)}>Edit</Link></td>
+                    <td>{item.prix_total}</td>
+                    <td><Link className='btn btn-warning btn-sm' onClick={updateProduct(item)}>Edit</Link></td>
                     <td><Link className="btn btn-danger btn-sm" onClick={(e) => handleDelete(e, item.id)}>Delete</Link></td>
-
-                    <td>{producStatus}</td>
                 </tr>
                 </>
             )
@@ -117,6 +97,8 @@ const Products = () => {
                             <th>Image</th>
                             <th>Price</th>
                             <th>Quantity</th>
+                            <th>Prix total</th>
+
                         </tr>
                     </thead>
                     <tbody>

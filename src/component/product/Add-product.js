@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
+import Navbar from '../../Navbar'
 // import swal from 'sweetalert'
 
 const Addproduct = () => {
@@ -14,43 +15,43 @@ const Addproduct = () => {
         category_id: '',
         name: '',
         pu: '',
-        qt: '',
-        description:""
+        qte: '',
+        description:"",
+        img:""
 
     })
 
-    const { category_id, name, pu, qt,description } = products
-    const {img} = picture
+    let { category_id, name, pu, qte,description, img } = products
+    // const {img} = picture
     const handleChange = (e) => {
         e.persist()
         setProducts({ ...products, [e.target.name]: e.target.value })
     }
 
-    const handleImage = e => {
-        e.persist()
-        setPicture({ img: e.target.files[0] })
-    }
+    // const handleImage = e => {
+    //     e.persist()
+    //     setPicture({ img: e.target.files[0] })
+    // }
 
     useEffect(() => {
-        axios.post(`http://localhost:8070/api/get_categories`, {"jsonrpc":"2.0",'params':{}}).then((res) => {
-            console.log(res)
+        axios.post(`http://localhost:8010/get_categories`, {"jsonrpc":"2.0",'params':{}}).then((res) => {
             setCategoriList(res.data.result.response)
         })
     }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
+        category_id = parseInt(category_id)
         const data = {
             img,
             category_id,
             name,
             pu,
-            qt,
+            qte,
             description
         }
-        axios.post(`http://localhost:8070/create_product`, {"jsonrpc":"2.0","params":data}).then(res => {
-            console.log('Res', res)
+        axios.post(`http://localhost:8010/create_product`, {"jsonrpc":"2.0","params":data}).then(res => {
+            // console.log('Res', res)
             if (res.data.result.status === 200) {
                 alert(res.data.result.message, 'success')
                 history.push('/product-list')
@@ -58,17 +59,13 @@ const Addproduct = () => {
                     category_id: '',
                     name: '',
                     price: '',
-                    qt: '',
+                    qte: '',
 
                 })
 
+            }else{
+                alert("Error")
             }
-            // else if(res.data.status == 422)
-            // {
-            //     swal("Veuillez remplir tous les champs",'', 'error')
-            //     setErrorList(res.data.errors)
-            // }
-
         })
     }
 
@@ -77,6 +74,7 @@ const Addproduct = () => {
 
     return (
         <>
+        <Navbar/>
         <div className="container">
 
             <div className="card mt-4">
@@ -128,13 +126,13 @@ const Addproduct = () => {
                                     </div>
                                     <div className="col-md-4 form-group mb-3">
                                         <label htmlFor="">Quantity</label>
-                                        <input type="text" name="qt" id="" className="form-control" onChange={handleChange} value={qt} />
+                                        <input type="text" name="qte" id="" className="form-control" onChange={handleChange} value={qte} />
                                         {/* <small className='text-danger'>{error_list.qt}</small> */}
                                     </div>
 
                                     <div className="col-md-8 form-group mb-3">
                                         <label htmlFor="">Image</label>
-                                        <input type="file" name="img" onChange={handleImage} className="form-control" />
+                                        <input type="text" name="img" onChange={handleChange} className="form-control" />
                                         {/* <small className='text-danger'>{error_list.image}</small> */}
                                     </div>
 

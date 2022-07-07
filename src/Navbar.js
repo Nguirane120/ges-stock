@@ -15,13 +15,13 @@ const Navbar = () => {
           <Link className="nav-link active" aria-current="page" href="#">Home</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to='/add-product'>Product</Link>
+          <Link className="nav-link" to='/product-list'>Product</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="/add-category">Category</Link>
+          <Link className="nav-link" to="/category-list">Category</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="/add-stock">Stock</Link>
+          <Link className="nav-link" to="/list-stock">Stock</Link>
         </li>
         {/* <li className="nav-item">
           <Link className="nav-link" to="/add-category">Vente</Link>

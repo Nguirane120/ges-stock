@@ -8,28 +8,24 @@ const StockList = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() =>{
-        axios.get(`http://127.0.0.1:8000/api/list-stock`).then((res) =>{
-            console.log('Res',res.data.stocks)
-            if(res.data.status == 200)
-            {
-                setStockList(res.data.stocks)
-            }
-            // setLoading(false)
+        axios.post(`http://localhost:8010/approvisionnement`, {"params":{}}).then((res) =>{
+            setStockList(res.data.result.response)
+            console.log(res.data.result)
         })
-    }, [setStockList])
+    }, [])
 
   return (
     <>
     <Navbar/>
       <div class="container">
-        <div class="row">
-            <div class="col-md-8">
+        <div class="row mt-5">
+            <Link className='btn btn-sm btn-success' to='/add-stock'>Add stock</Link>
+            <div class="col-md-12">
                 <table className='table table-striped'>
                     <thead>
                         <tr>
                             <th>Nom Agent</th>
                             <th>Produit</th>
-                            <th>Image</th>
                             <th>Quantity</th>
                         </tr>
                     </thead>
@@ -41,9 +37,7 @@ const StockList = () => {
                         <tr>
                             <td>{item.name}</td>
                             <th>{item.product_id}</th>
-                            <td><img src={`http://127.0.0.1:8000/${item.image}`} width="50px" alt={item.name} /></td>
-                            <th>{item.qt}</th>
-
+                            <th>{item.qte}</th>
 
                         </tr>
                                 )

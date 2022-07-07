@@ -19,12 +19,7 @@ const EditCat = (props) => {
    const [loading, setLoadning] = useState(true)
 
    useEffect(() =>{
-    // const category_id = props.match.params.id
-    //    axios.post(`http://localhost:8010/get_categories`, {}).then((res) =>{
-    //     console.log(res.data.result.response)
-    //     setListGory(res.data.result.response)  
-    //    })
-    //    setLoadning(false)
+
     setCategory(props.location.state)
    }, [])
    console.log(category)

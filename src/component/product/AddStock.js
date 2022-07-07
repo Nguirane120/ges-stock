@@ -13,25 +13,20 @@ const AddStock = () => {
     const [products, setProducts] = useState({
         product_id: '',
         name: '',
-        price: '',
-        qt: '',
+        qte: '',
 
     })
 
-    const { product_id, name, price, qt } = products
+    let { product_id, name, qte } = products
     const handleChange = (e) => {
         e.persist()
         setProducts({ ...products, [e.target.name]: e.target.value })
     }
 
-    const handleImage = e => {
-        e.persist()
-        setPicture({ image: e.target.files[0] })
-    }
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/all-product`).then((res) => {
-            setProductiList(res.data.products)
+        axios.post(`http://localhost:8010/get_products`, {"params":{}}).then((res) => {
+           setProductiList(res.data.result.response)
         })
     }, [])
 
@@ -39,28 +34,31 @@ const AddStock = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        product_id = parseInt(product_id)
+        const data = {
+           product_id,
+            name,
+            qte
+        }
 
-        const formDate = new FormData()
-        formDate.append('image', picture.image);
-        formDate.append('product_id', product_id);
-        formDate.append('name', name);
-        formDate.append('qt', qt);
+        console.log(data)
+       
 
 
-        axios.post(`http://127.0.0.1:8000/api/add-stock`, formDate).then(res => {
+        axios.post(`http://localhost:8010/addstock`, {"jsonrpc":"2.0","params":data}).then(res => {
             console.log('Res', res)
-            if (res.data.status === 200) {
-                Swal("Success", res.data.message, 'success')
-                // setErrorList([])
-                history.push('/product-list')
-                setProducts({
-                    product_id: '',
-                    name: '',
-                    qt: '',
+            // if (res.data.status === 200) {
+            //     Swal("Success", res.data.message, 'success')
+            //     // setErrorList([])
+            //     history.push('/product-list')
+            //     setProducts({
+            //         product_id: '',
+            //         name: '',
+            //         qt: '',
 
-                })
+            //     })
 
-            }
+            // }
             // else if(res.data.status == 422)
             // {
             //     swal("Veuillez remplir tous les champs",'', 'error')
@@ -114,17 +112,11 @@ const AddStock = () => {
                             </div>
                             <div className="col-md-4 form-group mb-3">
                                 <label htmlFor="">Quantity</label>
-                                <input type="text" name="qt" id="" className="form-control" onChange={handleChange} value={qt} />
+                                <input type="text" name="qte" id="" className="form-control" onChange={handleChange} value={qte} />
                                 {/* <small className='text-danger'>{error_list.qt}</small> */}
                             </div>
 
-                            <div className="col-md-8 form-group mb-3">
-                                <label htmlFor="">Image</label>
-                                <input type="file" name="image" onChange={handleImage} className="form-control" />
-                                {/* <small className='text-danger'>{error_list.image}</small> */}
-                            </div>
-
-
+                    
 
                         </div>
 
