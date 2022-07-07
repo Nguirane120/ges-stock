@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
+import Navbar from '../../Navbar'
+import EditCat from './Edit-Cat'
 // import swal from 'sweetalert'
 
 
@@ -8,42 +10,52 @@ export const ShowCategory = () => {
 
    const [listCategory, setListGory] = useState([])
    const [loading, setLoadning] = useState(true)
+   const [catData, setCatData] = useState()
+   const history = useHistory()
 
    useEffect(() =>{
-       axios.get(`http://127.0.0.1:8000/api/show-category`).then((res) =>{
-        console.log(res.data.categories)
-        if(res.data.status === 200)
-        {
-            setListGory(res.data.categories)
-        }
-        setLoadning(false)
+       axios.post(`http://localhost:8010/get_categories`, {}).then((res) =>{
+        console.log(res.data.result.response)
+        setListGory(res.data.result.response)  
        })
-   })
+       setLoadning(false)
+   }, [])
 
-//  if(loading){
-//      return(
-//          <h1>Loading...</h1>
-//      )
-//  }
+ if(loading){
+     return(
+         <h1>Loading...</h1>
+     )
+ }
 
 
- const handleDelete = (e, id) =>{
-     e.preventDefault()
-    //  const textClicked = e.currentTarget;
-    //  textClicked.innerText = 'Deleting...'
+ const handleDelete = (id) =>{
+    const data = {
+        "id":id
+    }
 
-    //  axios.delete(`api/delete-category/${id}`).then( res =>{
-    //      if(res.data.status === 200)
-    //      {
-    //          swal("Succes", res.data.message, 'success')
-    //         //  textClicked.closest('tr').remove()
-    //      }
-    //  })
+     axios.post(`http://localhost:8010/delete_categories`, {'params':data}).then( res =>{
+        console.log(res)
+     }).catch(error =>{
+        console.log("Error", error)
+     })
   
  }
 
 
+ const onUpdateSumbit=(data)=>{
+    console.log(data)
+    setCatData(data);
+    history.push({
+        pathname:"/edit-category",
+        state:data
+
+    })
+
+ }
+
   return (
+    <>
+    <Navbar/>
     <div className="container pt-5">
         <div className="card">
             <div className="card-header">
@@ -53,10 +65,10 @@ export const ShowCategory = () => {
                 <table className="table table-borded striped">
                     <thead>
                         <tr>
-                            
+                        <th>ID</th>
                             <th>Name</th>
 
-                            <th></th>
+                            <th>Description</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -64,15 +76,18 @@ export const ShowCategory = () => {
                      {
                         listCategory.map((item) =>{
                             return(
-                                <tr>
+                                <tr> 
                                             
+                                    <td>{item.id}</td>
                                     <td>{item.name}</td>
+                                    <td>{item.description}</td>
+
                                            
                                             <td>
-                                                <Link to='' className="btn btn-warning btn-sm">Update</Link>
+                                                <Link onClick={() =>onUpdateSumbit(item)} className="btn btn-warning btn-sm">Update</Link>
                                             </td>
                                             <td>
-                                            <Link className="btn btn-danger btn-sm" onClick={(e) => handleDelete(e)}>Delete</Link>
+                                            <Link className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>Delete</Link>
                                             </td>
                                         </tr>
                             )
@@ -85,5 +100,7 @@ export const ShowCategory = () => {
             </div>
         </div>
     </div>
+    
+    </>
   )
 }

@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+import Navbar from '../../Navbar'
 
 const EditProduct = (props) => {
     const [categoriList, setCategoriList] = useState()
@@ -68,7 +70,7 @@ const EditProduct = (props) => {
              console.log('Res',res)
              if(res.data.status === 200)
              {
-                 // swal("Success", res.data.message, 'success')
+                 Swal("Success", res.data.message, 'success')
                  // setErrorList([])
                  setProducts({
                      category_id:'',
@@ -87,6 +89,8 @@ const EditProduct = (props) => {
          })
      }
     return (
+        <>
+        <Navbar/>
         <div className="container">
 
             <div className="card mt-4">
@@ -170,6 +174,7 @@ const EditProduct = (props) => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
