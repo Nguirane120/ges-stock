@@ -13,10 +13,6 @@ const EditCat = (props) => {
     const [description, setDescription] = useState('')
     const location = useLocation();
 
-    // const { name, description} = category
-
-    const [listCategory, setListGory] = useState([])
-   const [loading, setLoadning] = useState(true)
 
    useEffect(() =>{
 
@@ -24,10 +20,6 @@ const EditCat = (props) => {
    }, [])
    console.log(category)
 
-    // const handleChange = (e) =>{
-    //     e.persist()
-    //     setCategory({...category, [e.target.name]:e.target.value})
-    // }
 
 const handleSubmit = (e) =>{
     e.preventDefault()
@@ -49,10 +41,6 @@ const handleSubmit = (e) =>{
            
             })
         }
-        // else if( res.data.status === 400){
-        //     setCategory({...category, error_list:res.data.errors})
-        //     console.log(error_list.slug)
-        // }
         
     })
 }

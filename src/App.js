@@ -13,6 +13,8 @@ import AddStock from './component/product/AddStock';
 import StockList from './component/product/StockList';
 import Login from './component/Login';
 import EditCat from './component/categories/Edit-Cat';
+import Vente from './component/Vente';
+import ListeVente from './component/ListeVente';
 
 // axios.defaults.headers.post['Content-Type'] = 'application/json'
 // axios.defaults.headers.post['Accept'] = 'application/json'
@@ -34,6 +36,9 @@ function App() {
       <Route path='/edit-product' component={EditProduct}/>
       <Route path='/add-stock' component={AddStock}/>
       <Route path='/list-stock' component={StockList}/>
+      <Route path='/vente' component={Vente}/>
+      <Route path='/liste-vente' component={ListeVente}/>
+
 
     </>
   );

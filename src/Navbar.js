@@ -18,13 +18,13 @@ const Navbar = () => {
           <Link className="nav-link" to='/product-list'>Product</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="/category-list">Category</Link>
+          <Link className="nav-link" to="/list-categories">Category</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to="/list-stock">Stock</Link>
+          <Link className="nav-link" to="/list-stock">Transaction</Link>
         </li>
         {/* <li className="nav-item">
-          <Link className="nav-link" to="/add-category">Vente</Link>
+          <Link className="nav-link" to="/liste-vente">Vente</Link>
         </li> */}
       </ul>
     </div>
