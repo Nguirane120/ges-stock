@@ -3,18 +3,21 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Navbar from '../../Navbar'
+import { useDispatch } from 'react-redux'
 
 const EditProduct = (props) => {
     const [categoriList, setCategoriList] = useState()
     const [product, setProduct] = useState([])
 
+    const dispatch = useDispatch()
+
 
     const [products, setProducts] = useState({
-        name_category: '',
+        category_id: '',
         name: '',
         pu: '',
         qte: '',
-        img: ''
+        img: ""
 
     })
 
@@ -51,6 +54,8 @@ const EditProduct = (props) => {
             qte,
             img
         }
+
+        dispatch({type:"UPDATE_PRODUCT", payload: data})
 
         axios.post(`http://localhost:8010/update_product`, { "jsonrpc": "2.0", "params": data }).then(res => {
             console.log("Res", res)

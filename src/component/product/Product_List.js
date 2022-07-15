@@ -4,24 +4,38 @@ import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import Navbar from '../../Navbar'
+import { useDispatch, useSelector } from 'react-redux';
 
 const Products = () => {
 
-    const [products, setProducts] = useState([])
+    // const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState()
     const history = useHistory()
 
+    const products = useSelector( state => state.allProducts.products)
 
-    useEffect(() => {
 
-        axios.post(`http://localhost:8010/get_products`, {}).then((res) => {
-            console.log(res)
-            setProducts(res.data.result.response)
-            setLoading(false)
 
+    const dispatch = useDispatch()
+
+    const fectchproduct = async () =>{
+    const res =  await  axios.post(`http://localhost:8010/get_products`, {}).catch( error =>{
+            console.log(error)
         })
+        dispatch({type:"PRODUCT_LIST", payload:res.data.result.response})
+        
+    };
+
+    
+    useEffect(() => {
+        fectchproduct()
     }, [])
+
+    // console.log("produit in redux", products)
+
+
+
 
 
 const updateProduct = (data) =>{
@@ -50,37 +64,13 @@ const updateProduct = (data) =>{
 
     }
 
-    // let fetchProducts = ''
-
-    // if (loading) {
-    //     return (
-    //         <h1>Loading products...</h1>
-    //     )
-    // } else {
-    //     fetchProducts = products.map((item, index) => {
-    //         return (
-    //             <>
-
-    //                 <tr key={index}>
-    //                     <td>{item.name_category}</td>
-    //                     <td>{item.name}</td>
-    //                     <td><img src={item.img} width="50px" alt={item.name} /></td>
-    //                     <td>{item.pu}</td>
-    //                     <td>{item.qte}</td>
-    //                     <td>{item.prix_total}</td>
-    //                     <td><Link className='btn btn-warning btn-sm' onClick={() => updateProduct(item)}>Edit</Link></td>
-    //                     <td><Link className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>Delete</Link></td>
-    //                 </tr>
-    //             </>
-    //         )
-    //     })
-    // }
+   
 
     return (
         <>
             <Navbar />
             <div className='container'>
-                <div className='row mt-5'>
+                <div className='row mt-5 gy-5'>
                 {
                         products.map((item) =>{
                             return(
@@ -88,9 +78,9 @@ const updateProduct = (data) =>{
                                 
                             <div className='col-md-4'>
 
-                        <div class="card" style={{width: '20rem'}}>
+                        <div class="card" style={{width: '18rem'}}>
                         
-                    <img src={item.img} class="card-img-top" alt="..."/>
+                    <img src={item.img} class="card-img-top img-fluid" alt="..."/>
                     <div class="card-body">
                         <h5 class="card-title">Name: {item.name}</h5>
                         <p class="card-text">Description: {item.description}</p>

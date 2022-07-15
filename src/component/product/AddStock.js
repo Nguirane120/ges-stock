@@ -3,21 +3,25 @@ import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Navbar from '../../Navbar'
+import { useDispatch, useSelector } from 'react-redux'
 
 const AddStock = () => {
     const [productiList, setProductiList] = useState()
     const [picture, setPicture] = useState([])
 
-    const [error_list, setErrorList] = useState([])
+    const productItem = useSelector( state => state.allProducts.products)
+    console.log("aythia", productItem)
+    const dispatch = useDispatch()
     const history = useHistory()
     const [products, setProducts] = useState({
         product_id: '',
-        name: '',
+        auType: '',
         qte: '',
 
     })
 
-    let { product_id, name, qte } = products
+    let { product_id, auType, qte } = products
+    
     const handleChange = (e) => {
         e.persist()
         setProducts({ ...products, [e.target.name]: e.target.value })
@@ -26,7 +30,8 @@ const AddStock = () => {
 
     useEffect(() => {
         axios.post(`http://localhost:8010/get_products`, {"params":{}}).then((res) => {
-           setProductiList(res.data.result.response)
+        //    setProductiList(res.data.result.response)
+           dispatch({type:"PRODUCT_LIST", payload:res.data.result.response})
         })
     }, [])
 
@@ -37,33 +42,23 @@ const AddStock = () => {
         product_id = parseInt(product_id)
         const data = {
            product_id,
-            name,
+           auType,
             qte
         }
 
         console.log(data)
+
+        dispatch({type:"ADD_ENTREE", payload: data})
        
 
 
-        axios.post(`http://localhost:8010/addstock`, {"jsonrpc":"2.0","params":data}).then(res => {
-            console.log('Res', res)
-            // if (res.data.status === 200) {
-            //     Swal("Success", res.data.message, 'success')
-            //     // setErrorList([])
-            //     history.push('/product-list')
-            //     setProducts({
-            //         product_id: '',
-            //         name: '',
-            //         qt: '',
-
-            //     })
-
-            // }
-            // else if(res.data.status == 422)
-            // {
-            //     swal("Veuillez remplir tous les champs",'', 'error')
-            //     setErrorList(res.data.errors)
-            // }
+        axios.post(`http://localhost:8010/operation`, {"jsonrpc":"2.0","params":data}).then(res => {
+            if('Res', res.data.result.status == 200){
+                alert(res.data.result.message)
+                history.push('/list-stock')
+            }else{
+                alert(console.error())
+            }
 
         })
     }
@@ -90,7 +85,7 @@ const AddStock = () => {
                                         
                                             <option>Select Product</option>
                                             {
-                                                productiList && productiList.map((item, index) => {
+                                                productItem && productItem.map((item, index) => {
                                                     return (
                                                         <>
                                                             <option value={item.id} key={index.id}>{item.name}</option>
@@ -104,8 +99,13 @@ const AddStock = () => {
                                 </div>
 
                                 <div className="form-group mb-3 col-md-8">
-                                    <label htmlFor="">Nom Agent</label>
-                                    <input type="text" name="name" id="" className="form-control" onChange={handleChange} value={name} />
+                                    <label htmlFor="">Operation</label>
+                                    <select className="form-select" name='auType' onChange={handleChange} value={auType} >
+                                            <option></option>
+                                            <option value="entree">Entree</option>
+                                            <option value="sortie">Sortie</option>
+
+                                    </select>
 
                                 </div>
 

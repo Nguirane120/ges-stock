@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, {useState, useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link,useLocation } from 'react-router-dom'
 import Navbar from '../../Navbar'
 // import swal from 'sweetalert'
@@ -13,6 +14,11 @@ const EditCat = (props) => {
     const [description, setDescription] = useState('')
     const location = useLocation();
 
+    const itemcategory = useSelector( state => state)
+
+    console.log("aythia", itemcategory)
+
+    const dispatch = useDispatch()
 
    useEffect(() =>{
 
@@ -20,6 +26,7 @@ const EditCat = (props) => {
    }, [])
    console.log(category)
 
+//    const {name, description} = category
 
 const handleSubmit = (e) =>{
     e.preventDefault()
@@ -30,8 +37,9 @@ const handleSubmit = (e) =>{
     
     }
 
+    dispatch({type:"UPDATE_CATEGORY", payload:data})
+
     axios.post(`http://localhost:8010/update_category`,{"jsonrpc":"2.0", "params":data} ).then( res =>{
-      console.log('RES', res)
         if(res.data.result.status === 200){
             alert("Success", res.data.result.message)
             setCategory({
@@ -64,7 +72,7 @@ const handleSubmit = (e) =>{
  
         <div className="form-group mb-3">
         <label htmlFor="name">Name</label>
-        <input type="text" name="name" id="" className="form-control mb-3"  onChange={(e) => setName(e.target.value)} value={name} />
+        <input type="text" name="name" id="" className="form-control mb-3"  onChange={(e) => setName(e.target.value)} value={category.name} />
         </div>
         <div className="form-group mb-3">
         <label htmlFor="name">Description</label>

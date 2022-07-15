@@ -53,6 +53,7 @@ const handleSubmit = (e) =>{
 
 return (
  <>
+ <p>{React.version}</p>
      <div className="container">
          <div className="row justify-content-center">
              <div className="col-md-6 py-5">

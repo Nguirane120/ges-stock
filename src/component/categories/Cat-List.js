@@ -3,35 +3,45 @@ import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
 import Navbar from '../../Navbar'
 import EditCat from './Edit-Cat'
+import { useDispatch, useSelector } from 'react-redux'
 // import swal from 'sweetalert'
 
 
 export const ShowCategory = () => {
-
-   const [listCategory, setListGory] = useState([])
-   const [loading, setLoadning] = useState(true)
    const [catData, setCatData] = useState()
    const history = useHistory()
 
+  
+
+   const dispatch = useDispatch()
+   const  categories= useSelector(state => state.allCategory.categories)
+   
+
+   const fectchcategory = async () =>{
+    const res =  await  axios.post(`http://localhost:8010/get_categories`, {}).catch(error =>{
+            console.log(error)
+        })
+        dispatch({type: "CATEGORY_LIST", payload: res.data.result.response})
+    };
+
    useEffect(() =>{
-       axios.post(`http://localhost:8010/get_categories`, {}).then((res) =>{
-        console.log(res.data.result.response)
-        setListGory(res.data.result.response)  
-       })
-       setLoadning(false)
+    fectchcategory()
    }, [])
 
- if(loading){
-     return(
-         <h1>Loading...</h1>
-     )
- }
+
+//  if(loading){
+//      return(
+//          <h1>Loading...</h1>
+//      )
+//  }
 
 
  const handleDelete = (id) =>{
     const data = {
         "id":id
     }
+
+    dispatch({type:"DELETE_CATEGORY",payload: data})
 
     console.log(data)
      axios.post(`http://localhost:8010/delete_category`, {'params':data}).then( res =>{
@@ -60,7 +70,7 @@ export const ShowCategory = () => {
     <div className="container pt-5">
         <div className="card">
             <div className="card-header">
-                <h1>Liste of categories  <Link to='/add-category' className='btn btn-primary float-end'>Add Category</Link></h1>
+                <h1>Liste des categories  <Link to='/add-category' className='btn btn-primary float-end'>Add Category</Link></h1>
             </div>
             <div className="card-body">
                 <table className="table table-borded striped">
@@ -75,9 +85,9 @@ export const ShowCategory = () => {
                     </thead>
                     <tbody>
                      {
-                        listCategory.map((item) =>{
+                        categories.map((item, idx) =>{
                             return(
-                                <tr> 
+                                <tr key={idx}> 
                                             
                                     <td>{item.id}</td>
                                     <td>{item.name}</td>
@@ -85,10 +95,10 @@ export const ShowCategory = () => {
 
                                            
                                             <td>
-                                                <Link onClick={() =>onUpdateSumbit(item)} className="btn btn-warning btn-sm">Update</Link>
+                                                <span onClick={() =>onUpdateSumbit(item)} className="btn btn-warning btn-sm">Update</span>
                                             </td>
                                             <td>
-                                            <Link className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>Delete</Link>
+                                            <span className="btn btn-danger btn-sm" onClick={() => handleDelete(item.id)}>Delete</span>
                                             </td>
                                         </tr>
                             )

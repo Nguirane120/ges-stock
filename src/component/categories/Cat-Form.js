@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
 import Navbar from '../../Navbar'
 // import swal from 'sweetalert'
 
@@ -12,6 +13,8 @@ const AddCategory = () => {
         description:""
     })
 
+    const history = useHistory()
+    const dispatch = useDispatch()
     const { name, description} = category
 
     const handleChange = (e) =>{
@@ -27,22 +30,20 @@ const handleSubmit = (e) =>{
     
     }
 
-    axios.post(`http://localhost:8010/create_category`,{"jsonrpc":"2.0", "params":data} ).then( res =>{
-      console.log('RES', res)
-        if(res.data.result.status === 200){
-            alert("Success", res.data.result.message)
-            setCategory({
+    console.log(data)
 
-                name:'',
-                description:""
-           
-            })
+    dispatch({type:"ADD_CATEGORY", payload: data})
+
+    
+
+    axios.post(`http://localhost:8010/create_category`, {"jsonrpc":"2.0","params":data}).then(res => {
+        if('Res', res.data.result.status == 200){
+            alert(res.data.result.message)
+            history.push('/list-categories')
+        }else{
+            alert(console.error())
         }
-        // else if( res.data.status === 400){
-        //     setCategory({...category, error_list:res.data.errors})
-        //     console.log(error_list.slug)
-        // }
-        
+
     })
 }
 

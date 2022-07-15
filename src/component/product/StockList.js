@@ -1,38 +1,66 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
 import Navbar from '../../Navbar'
 
 const StockList = () => {
-    const [stocklist, setStockList] = useState([])
-    const [loading, setLoading] = useState(true)
-    
 
-    useEffect(() =>{
-        axios.post(`http://localhost:8010/get_stocks`, {"params":{}}).then((res) =>{
-            setStockList(res.data.result.response)
-            // let date = new Date().toDateString();
-            // // setStockList(res.data.result.response.create_date)
-            // // console.log(res.data.result)
-            console.log("RES", res.data.result.response)
+    const [loading, setLoading] = useState(true)
+    const [entree, setEntree] = useState()
+    const history = useHistory()
+    
+    const entreeItem = useSelector( state => state.entreeList.entree)
+    const dispatch = useDispatch()
+
+   const fectchEntree = async () =>{
+    const res =  await  axios.post(`http://localhost:8010/get_stocks`, {}).catch( error =>{
+            console.log(error)
         })
+        dispatch({type:"ENTREE_LIST", payload:res.data.result.response})
+        
+    };
+
+    
+    useEffect(() => {
+        fectchEntree()
     }, [])
 
-    //  const getDate = () => {
-    //     return  new Date().toDateString();
-    //     console.log(date)
-    //    }
+  
+    const updateEntree = (data) =>{
+        console.log(data)
+        setEntree(data);
+        history.push({
+            pathname:"/edit-entree",
+            state:data
+    
+        })
+    }
 
-    const current = new Date();
-  const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+    const handleDelete = (id) =>{
+        const data = {
+            "id":id
+        }
+    
+        console.log(data)
+        dispatch({type:"DELETE_ENTREE", payload: data})
+         axios.post(`http://localhost:8010/delete_stock`, {'params':data}).then( res =>{
+            console.log(res)
+         }).catch(error =>{
+            console.log("Error", error)
+         })
+      
+     }
+
+
 
   return (
     <>
     <Navbar/>
       <div class="container">
-            <Link className='btn btn-lg btn-success mt-5' to='/add-stock'>Entree</Link>
-            <Link className='btn btn-lg btn-warning mt-5 float-end' to='/vente'>Sortie</Link>
+          
         <div class="row mt-5">
+            <Link className='btn btn-lg btn-success mt-5' to='/add-stock'>Entree</Link>
             <div class="col-md-12">
                 <table className='table table-striped'>
                     <thead>
@@ -41,11 +69,13 @@ const StockList = () => {
                             <th>Produit</th>
                             <th>Quantity</th>
                             <th>Date entree</th>
+                            <th>Action</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            stocklist.map((item, idx) =>{
+                            entreeItem.map((item, idx) =>{
                                 return(
 
                         <tr key={idx}>
@@ -53,6 +83,10 @@ const StockList = () => {
                             <th>{item.product_id}</th>
                             <th>{item.qte}</th>
                             <th>{item.create_date}</th>
+                            <th>
+                                <Link className='btn btn-warning btn-sm' onClick={() =>updateEntree(item)}>edit</Link>
+                            </th>
+                            <th> <Link className='btn btn-danger btn-sm' onClick={() => handleDelete(item.id)}>delete</Link></th>
 
                         </tr>
                                 )
